@@ -6,7 +6,6 @@ const queries = require("../db/queries");
 const alphaErr = "must only contain letters.";
 const lengthErr = "must be between 1 and 15 characters.";
 const lengthErrPassword = "must be between 6 and 12 characters.";
-
 const validateUser = [
   body("firstName")
     .trim()
@@ -61,5 +60,35 @@ module.exports.addUser = [
     });
 
     res.redirect("/");
+  }),
+];
+
+const realSecretCode = "I want to join!";
+const lengthErrSecretCode = "has between 6 and 12 characters.";
+const validateSecretCode = [
+  body("secretCode")
+    .trim()
+    .isLength({ min: 6, max: 12 })
+    .withMessage(`The secret code ${lengthErrSecretCode}`)
+    .custom(async (secretCode) => {
+      if (realSecretCode !== secretCode) {
+        throw new Error("Incorrect membership code!");
+      }
+    }),
+];
+
+module.exports.updateMembershipStatus = [
+  validateSecretCode,
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).render("join-membership-form", {
+        errors: errors.array(),
+      });
+    }
+
+    const user = req.user;
+    await queries.upgradeMembership({ user });
+    redirect("/");
   }),
 ];

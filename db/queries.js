@@ -6,3 +6,9 @@ module.exports.addUser = async ({ firstName, lastName, email, password }) => {
     [firstName, lastName, email, password],
   );
 };
+
+module.exports.upgradeMembership = async ({ user }) => {
+  await pool.query(`UPDATE users SET membership_status = true WHERE name=$1;`, [
+    user,
+  ]);
+};
