@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign-up</title>
+  </head>
+  <body>
+    <%- include('partials/errors.ejs') %>
+    <form
+      action="/sign-up"
+      method="post"
+      style="
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-template-rows: 1fr;
+        gap: 5px;
+        width: 500px;
+      "
+    >
+      <label for="first-name">First name</label>
+      <input type="text" name="firstName" id="first-name" required />
+      <label for="last-name">Last name</label>
+      <input type="text" name="lastName" id="last-name" required />
+      <label for="email">E-mail</label>
+      <input type="email" name="email" id="email" required />
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" required />
+      <label for="confirm-password">Confirm password</label>
+      <input
+        type="password"
+        name="confirmPassword"
+        id="confirm-password"
+        required
+      />
+      <button type="submit" style="grid-column: 1 / -1">Submit</button>
+    </form>
+  </body>
+</html>
