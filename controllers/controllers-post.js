@@ -101,12 +101,16 @@ module.exports.logIn = [
   }),
 ];
 
-module.exports.addMessage = asyncHandler(async (req, res) => {
-  const text = req.body.newMessage;
-  const date = new Date();
-  const userId = req.user.id;
+const validateMessage = [body("newMessage").escape()];
+module.exports.addMessage = [
+  validateMessage,
+  asyncHandler(async (req, res) => {
+    const text = req.body.newMessage;
+    const date = new Date();
+    const userId = req.user.id;
 
-  await queries.addMessage({ text, date, userId });
+    await queries.addMessage({ text, date, userId });
 
-  res.redirect("/");
-});
+    res.redirect("/");
+  }),
+];
