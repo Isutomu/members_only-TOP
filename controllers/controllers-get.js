@@ -5,3 +5,7 @@ module.exports.renderSignupForm = (req, res) => {
 module.exports.renderJoinMembershipForm = (req, res) => {
   res.render("join-membership-form");
 };
+
+module.exports.renderLoginForm = (req, res) => {
+  res.render("log-in-form");
+};

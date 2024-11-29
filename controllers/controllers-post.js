@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const queries = require("../db/queries");
+const passport = require("passport");
 
 const alphaErr = "must only contain letters.";
 const lengthErr = "must be between 1 and 15 characters.";
@@ -64,11 +65,11 @@ module.exports.addUser = [
 ];
 
 const realSecretCode = "I want to join!";
-const lengthErrSecretCode = "has between 6 and 12 characters.";
+const lengthErrSecretCode = "has between 8 and 15 characters.";
 const validateSecretCode = [
   body("secretCode")
     .trim()
-    .isLength({ min: 6, max: 12 })
+    .isLength({ min: 8, max: 15 })
     .withMessage(`The secret code ${lengthErrSecretCode}`)
     .custom(async (secretCode) => {
       if (realSecretCode !== secretCode) {
@@ -87,8 +88,15 @@ module.exports.updateMembershipStatus = [
       });
     }
 
-    const user = req.user;
-    await queries.upgradeMembership({ user });
-    redirect("/");
+    const userId = req.user.id;
+    await queries.upgradeMembership({ userId });
+    res.redirect("/");
+  }),
+];
+
+module.exports.logIn = [
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/log-in",
   }),
 ];
