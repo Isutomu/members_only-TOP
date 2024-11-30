@@ -4,6 +4,7 @@
   "description": "Project made according to [guidelines](https://www.theodinproject.com/lessons/node-path-nodejs-members-only).",
   "main": "index.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
