@@ -20,8 +20,19 @@
     <% if(messages.length) { %>
     <% messages.forEach((message) => { %>
     <div style="display: flex; flex-direction: column; margin-bottom: 10px">
-      <% if(userStatus === 2) { %>
+      <% if(userStatus >= 2) { %>
       <div style="display: flex; gap: 10px">
+        <% if(userStatus === 3) { %>
+        <form action="/delete-message" method="post">
+          <input
+            type="text"
+            name="messageId"
+            value="<%= message.id %>"
+            hidden
+          />
+          <button type="submit" style="color: red">X</button>
+        </form>
+        <% } %>
         <span><%= message.email %></span>
         <span><%= message.date %></span>
       </div>

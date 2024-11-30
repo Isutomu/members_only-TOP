@@ -114,3 +114,40 @@ module.exports.addMessage = [
     res.redirect("/");
   }),
 ];
+
+const realAdminSecretCode = "I am the chosen one!";
+const lengthErrAdminSecretCode = "has between 15 and 22 characters.";
+const validateAdminSecretCode = [
+  body("secretCode")
+    .trim()
+    .isLength({ min: 15, max: 22 })
+    .withMessage(`The secret code ${lengthErrAdminSecretCode}`)
+    .custom(async (secretCode) => {
+      if (realAdminSecretCode !== secretCode) {
+        throw new Error("Incorrect Admin code!");
+      }
+    }),
+];
+
+module.exports.updateAdminStatus = [
+  validateAdminSecretCode,
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).render("become-admin-form", {
+        errors: errors.array(),
+      });
+    }
+
+    const userId = req.user.id;
+    await queries.upgradeToAdmin({ userId });
+    res.redirect("/");
+  }),
+];
+
+module.exports.deleteMessage = asyncHandler(async (req, res) => {
+  const messageId = req.body.messageId;
+  await queries.deleteMessage({ messageId });
+
+  res.redirect("/");
+});

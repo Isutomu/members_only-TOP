@@ -43,10 +43,10 @@ async function getMessagesEmail(rows) {
 
 module.exports.getMessages = async (userStatus) => {
   const { rows } = await pool.query(
-    `SELECT text, date, user_id FROM messages;`,
+    `SELECT text, date, user_id, id FROM messages;`,
   );
 
-  if (userStatus === 2) {
+  if (userStatus >= 2) {
     const messages = await getMessagesEmail(rows);
     return messages;
   }
@@ -59,4 +59,12 @@ module.exports.addMessage = async (message) => {
     `INSERT INTO messages (text, date, user_id) VALUES ($1, $2, $3)`,
     [message.text, message.date, message.userId],
   );
+};
+
+module.exports.upgradeToAdmin = async ({ userId }) => {
+  await pool.query(`UPDATE users SET admin = true WHERE id=$1;`, [userId]);
+};
+
+module.exports.deleteMessage = async ({ messageId }) => {
+  await pool.query(`DELETE FROM messages WHERE id=$1`, [messageId]);
 };

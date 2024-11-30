@@ -16,15 +16,15 @@ module.exports.renderLoginForm = (req, res) => {
 /**
  * Determines the clearance level of a user based in their login status and membership access.
  * @param {object} user - The user object from the session.
- * @returns {number} Can be 0 (visitor), 1 (logged) or 2 (logged and is member).
+ * @returns {number} Can be 0 (visitor), 1 (logged), 2 (logged and is member) or 3 (admin).
  */
 async function getUserClearance(userId) {
   if (!userId) {
     return 0;
   }
 
-  const { membership_status } = await queries.getUserById(userId);
-  return membership_status ? 2 : 1;
+  const { membership_status, admin } = await queries.getUserById(userId);
+  return admin ? 3 : membership_status ? 2 : 1;
 }
 
 module.exports.renderMessagesBoard = asyncHandler(async (req, res) => {
@@ -33,3 +33,7 @@ module.exports.renderMessagesBoard = asyncHandler(async (req, res) => {
 
   res.render("homepage", { messages, userStatus });
 });
+
+module.exports.renderBecomeAdminForm = (req, res) => {
+  res.render("become-admin-form");
+};
